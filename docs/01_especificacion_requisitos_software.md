@@ -60,11 +60,13 @@ El sistema deberá monitorear la actividad del teclado y ratón. Si no se detect
 
 ### RF-04: Persistencia de datos
 
-Toda la información del registro de jornada deberá almacenarse en una base de datos PostgreSQL, incluyendo: proyecto activo, fecha, hora de inicio, hora de fin, tiempo efectivo trabajado, y pausas detectadas.
+Toda la información del registro de jornada deberá almacenarse en una base de datos local SQLite, incluyendo: proyecto activo, fecha, hora de inicio, hora de fin, tiempo efectivo trabajado, y pausas detectadas.
+
+El sistema generará un archivo `timetrack.db` que se ubicará junto al ejecutable y contendrá todos los registros de trabajo del usuario.
 
 ### RF-05: Exportación a Excel
 
-El sistema deberá permitir exportar los registros de jornada a un archivo Excel (.xlsx), con separación por proyectos y fechas.
+El sistema deberá permitir exportar los registros de jornada a un archivo Excel (.xlsx), con separación por proyectos y fechas, a partir de los datos almacenados en la base de datos SQLite.
 
 ### RF-06: Visualización de resumen
 
@@ -87,8 +89,12 @@ El sistema deberá permitir al usuario consultar un resumen diario o por proyect
 
 ### 3.3 Requisitos de la interfaz de software
 
-- Interfaz con PostgreSQL para almacenar registros.
-- Librerías de Python para detección de periféricos (`pynput`), manipulación de fechas (`datetime`) y exportación a Excel (`pandas`, `openpyxl`).
+- Interfaz con base de datos SQLite para almacenar registros de jornada, pausas y proyectos.
+- Librerías de Python para:
+  - Detección de periféricos (`pynput`)
+  - Manipulación de fechas y tiempos (`datetime`)
+  - Exportación a Excel (`pandas`, `openpyxl`)
+  - Acceso a base de datos (`sqlite3`)
 
 ### 3.4 Requisitos de la interfaz de comunicación
 
@@ -113,7 +119,8 @@ El sistema deberá permitir al usuario consultar un resumen diario o por proyect
 ### 4.3 Compatibilidad
 
 - Compatible con Windows 10 y superiores.
-- Requiere Python 3.10+ y PostgreSQL 14+.
+- Requiere Python 3.10+ para el desarrollo.
+- El programa final podrá ser ejecutado como `.exe` sin necesidad de instalar dependencias ni sistemas de base de datos externos.
 
 ### 4.4 Confiabilidad
 
@@ -140,3 +147,6 @@ El sistema deberá permitir al usuario consultar un resumen diario o por proyect
 
 - Código fuente documentado.
 - Proyecto versionado con Git (GitHub), incluyendo ramas `main` y `dev`.
+- La base de datos SQLite se almacenará localmente en un archivo `.db`, que acompañará al ejecutable final (`.exe`).
+- La aplicación será entregada en formato ejecutable para facilitar su uso por usuarios sin conocimientos técnicos.
+- El sistema será auto-contenido, sin necesidad de instalación de PostgreSQL, Python o librerías externas.

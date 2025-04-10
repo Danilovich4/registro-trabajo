@@ -24,7 +24,7 @@ Este proyecto tiene como objetivo desarrollar una aplicación de escritorio que 
 - [x] Crear estructura de carpetas del proyecto
 - [x] Crear script `.bat` de inicialización
 - [x] Crear `README.md` inicial
-- [ ] Documentar requisitos (PMBOK + plantilla SRS)
+- [x] Documentar requisitos (PMBOK + plantilla SRS)
 
 ### Etapa 2 - Diseño Técnico
 
