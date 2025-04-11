@@ -28,9 +28,9 @@ Este proyecto tiene como objetivo desarrollar una aplicación de escritorio que 
 
 ### Etapa 2 - Diseño Técnico
 
-- [ ] Definir arquitectura (Clean Architecture)
-- [ ] Diseñar modelo de datos (PostgreSQL)
-- [ ] Identificar librerías necesarias en `requirements.txt`
+- [x] Definir arquitectura (Clean Architecture)
+- [x] Diseñar modelo de datos (PostgreSQL)
+- [x] Identificar librerías necesarias en `requirements.txt`
 
 ### Etapa 3 - Desarrollo MVP
 
