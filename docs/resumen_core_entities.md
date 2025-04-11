@@ -58,7 +58,7 @@ Pausa(registro_id: int, inicio: datetime, fin: datetime, id: int = None)
 
 ## 📂 Ubicación del código
 
-```
+```plaintext
 src/
 └── core/
     └── entities/
