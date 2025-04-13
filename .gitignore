@@ -1,0 +1,62 @@
+# 🐍 Python: Archivos de compilación
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# 📦 Entornos virtuales (locales)
+.venv/
+env/
+venv/
+ENV/
+
+# 📋 Archivos temporales de pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 💽 Bases de datos locales
+*.db
+timetrack.db
+
+# 📊 Exportaciones del cliente
+*.xlsx
+*.csv
+
+# 🧪 Pruebas / cobertura
+htmlcov/
+.tox/
+.nox/
+.coverage
+coverage.xml
+*.cover
+.cache
+nosetests.xml
+test_*.log
+
+# ⚙️ Configuraciones de IDEs y editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 💼 Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# 🧾 Archivos generados por PyInstaller o cx_Freeze (si generas .exe)
+dist/
+build/
+*.spec
+
+# 🔐 Archivos sensibles (si en el futuro usamos variables de entorno)
+.env
+.env.*
+
+# 🚫 Copias de seguridad / logs
+*.log
+*.bak
+*.tmp
+*.swp
+*.old
