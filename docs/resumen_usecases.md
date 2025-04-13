@@ -1,17 +1,18 @@
 # ✅ Resumen Fase 3.2 – Casos de Uso (`core/usecases/`)
 
-Esta sección contiene los casos de uso que orquestan las acciones principales del sistema TimeTrack, según Clean Architecture.
+Esta sección recoge todos los casos de uso implementados en la lógica del sistema TimeTrack, basados en Clean Architecture.
 
 ---
 
-## 🔁 ¿Qué es un caso de uso?
+## 🧠 ¿Qué es un caso de uso?
 
 Un caso de uso:
 
-- Representa **una acción concreta que el usuario puede realizar**
-- Usa las **entities del sistema** para aplicar reglas de negocio
-- **No se conecta directamente a GUI, BD, ni exportación**
-- Devuelve resultados para que otra capa decida qué hacer con ellos
+- Representa **una acción real que el usuario puede realizar**
+- Aplica **reglas de negocio**
+- Orquesta entidades (`Proyecto`, `Registro`, `Pausa`)
+- **No accede directamente a BD, GUI ni exporta nada**
+- Devuelve resultados que otras capas (GUI, infraestructura) usan
 
 ---
 
@@ -23,13 +24,8 @@ Un caso de uso:
 
 📁 `core/usecases/iniciar_registro.py`
 
-- Crea un nuevo objeto `Registro` con la hora actual como inicio.
-- No lo guarda, solo lo devuelve para que otras capas lo usen.
-- Preparado para usarse al iniciar jornada o tras cambio de proyecto.
-
-```python
-registro = iniciar_registro(proyecto_id=1)
-```
+- Crea un nuevo `Registro` con la hora actual como inicio.
+- No guarda en base de datos, sólo devuelve el objeto listo.
 
 ---
 
@@ -37,16 +33,10 @@ registro = iniciar_registro(proyecto_id=1)
 
 📁 `core/usecases/cambiar_proyecto.py`
 
-- Finaliza el `registro_actual`.
-- Crea un nuevo `Registro` con el nuevo `proyecto_id`.
-- Valida que el proyecto nuevo no sea el mismo.
-- Devuelve una tupla con:
-  - el registro finalizado
-  - el nuevo registro iniciado
-
-```python
-registro_final, nuevo = cambiar_proyecto(registro_actual, nuevo_proyecto_id)
-```
+- Finaliza el registro actual (marcando hora de fin).
+- Crea un nuevo registro para el proyecto nuevo.
+- Valida que no sea el mismo proyecto.
+- Devuelve ambos registros: el cerrado y el nuevo.
 
 ---
 
@@ -54,31 +44,51 @@ registro_final, nuevo = cambiar_proyecto(registro_actual, nuevo_proyecto_id)
 
 📁 `core/usecases/finalizar_jornada.py`
 
-- Finaliza el `registro_actual`, marcando la hora de fin.
-- Valida que no esté ya finalizado.
-- Devuelve el objeto actualizado para ser guardado o mostrado.
-
-```python
-registro_final = finalizar_jornada(registro_actual)
-```
+- Marca como finalizado el registro actual.
+- Valida que no esté ya cerrado.
+- Devuelve el objeto actualizado para guardar o mostrar.
 
 ---
 
-## 📌 Estado actual
+### 4. `registrar_pausa(registro_id: int, inicio: datetime, fin: datetime) -> Pausa`
 
-| Usecase               | Estado      |
-|------------------------|-------------|
-| `iniciar_registro`     | ✅ Completo |
-| `cambiar_proyecto`     | ✅ Completo |
-| `finalizar_jornada`    | ✅ Completo |
+📁 `core/usecases/registrar_pausa.py`
+
+- Crea una pausa asociada a un registro activo.
+- Valida que `inicio < fin` (lo hace la entidad `Pausa`).
+- Devuelve el objeto `Pausa` listo para ser guardado.
 
 ---
 
-## 🧠 Próximos posibles casos de uso
+### 5. `consultar_registros_por_fecha(fecha, registros, pausas) -> dict`
 
-- `registrar_pausa`: guardar una pausa detectada en el registro activo
-- `obtener_resumen`: construir resumen diario o por proyecto
-- `exportar_registros`: convertir datos a Excel
-- `consultar_registros_por_fecha`: para generar reportes o visualizaciones
+📁 `core/usecases/consultar_registros_por_fecha.py`
+
+- Filtra todos los `Registro` y `Pausa` de una fecha dada.
+- Devuelve un diccionario con las listas correspondientes.
+- No hace búsquedas ni accede a BD, sólo opera sobre listas existentes.
+
+---
+
+### 6. `obtener_resumen_diario(fecha, registros, pausas, proyectos_por_id) -> dict`
+
+📁 `core/usecases/obtener_resumen_diario.py`
+
+- Calcula cuánto tiempo se trabajó en cada proyecto en un día específico.
+- Agrupa el trabajo y pausas por proyecto.
+- Devuelve un resumen listo para mostrar o exportar.
+
+---
+
+## 📌 Estado final
+
+| Usecase                    | Estado      |
+|-----------------------------|-------------|
+| `iniciar_registro`          | ✅ Completo |
+| `cambiar_proyecto`          | ✅ Completo |
+| `finalizar_jornada`         | ✅ Completo |
+| `registrar_pausa`           | ✅ Completo |
+| `consultar_registros_por_fecha` | ✅ Completo |
+| `obtener_resumen_diario`    | ✅ Completo |
 
 ---

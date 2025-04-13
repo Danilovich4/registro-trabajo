@@ -68,12 +68,3 @@ src/
 ```
 
 ---
-
-## 📌 Próximo paso
-
-Pasar a la **fase 3.2 – Implementación de casos de uso (`core/usecases/`)**, donde usaremos estas entidades para realizar acciones como:
-
-- Iniciar jornada
-- Cambiar de proyecto
-- Finalizar jornada
-- Consultar registros
