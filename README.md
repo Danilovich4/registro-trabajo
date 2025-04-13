@@ -6,11 +6,11 @@ Este proyecto tiene como objetivo desarrollar una aplicación de escritorio que 
 
 ## 🛠 Tecnologías utilizadas
 
-- **Lenguaje de programación:** Python 🐍
-- **Base de datos:** PostgreSQL 🐘
+- **Lenguaje de programación:** Python
+- **Base de datos:** SQLite
 - **Exportación de datos:** Excel (vía `pandas` o `openpyxl`)
-- **Control de versiones:** Git + GitHub 🌐
-- **Editor de desarrollo:** Visual Studio Code 💻
+- **Control de versiones:** Git + GitHub
+- **Editor de desarrollo:** Visual Studio Code
 - **Gestión de ramas:** `main` (producción) y `dev` (desarrollo)
 - **Automatización:** Script `.bat` para crear estructura inicial
 
@@ -29,8 +29,8 @@ Este proyecto tiene como objetivo desarrollar una aplicación de escritorio que 
 ### Etapa 2 - Diseño Técnico
 
 - [x] Definir arquitectura (Clean Architecture)
-- [x] Diseñar modelo de datos (PostgreSQL)
-- [x] Identificar librerías necesarias en `requirements.txt`
+- [x] Diseñar modelo de datos (SQLite)
+- [ ] Identificar librerías necesarias en `requirements.txt`
 
 ### Etapa 3 - Desarrollo MVP
 
