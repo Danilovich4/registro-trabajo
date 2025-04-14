@@ -45,5 +45,7 @@ def guardar_registro(registro: Registro):
         None  # Se calculará más adelante con la suma de pausas reales
     ))
 
+    registro.id = cursor.lastrowid
+
     conn.commit()
     conn.close()

@@ -1,6 +1,14 @@
+#Python pueda encuentrar los módulos internos
+import sys
+import os
+
+# Añadir la ruta raíz del proyecto (una carpeta arriba de /src)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
+
+
 import tkinter as tk
 from tkinter import ttk, simpledialog, messagebox
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 # ENTITIES y USECASES
 from core.entities.proyecto import Proyecto
@@ -111,20 +119,21 @@ class VentanaPrincipal:
                 break
 
         self.registro_actual = iniciar_registro(self.proyecto_actual.id)
+        guardar_registro(self.registro_actual)
         guardar_estado_sesion(self.registro_actual, en_pausa=False)
 
         self.label_estado.config(text=f"✅ Trabajando en '{self.proyecto_actual.nombre}'", fg="green")
 
     def pausar_manual(self):
-        if not self.registro_actual or self.pausa_actual:
-            return
+        inicio = datetime.now()
 
         self.pausa_actual = registrar_pausa(
             registro_id=self.registro_actual.id,
-            inicio=datetime.now(),
-            fin=datetime.now()  # se ajusta al final
+            inicio=inicio,
+            fin=inicio + timedelta(seconds=1)
         )
-        self.pausa_actual.fin = None
+
+        self.pausa_actual.fin = None 
         guardar_estado_sesion(self.registro_actual, en_pausa=True)
 
         self.label_estado.config(text="⏸️ En pausa manual", fg="orange")
@@ -157,6 +166,7 @@ class VentanaPrincipal:
 
         registro_final, nuevo_registro = cambiar_proyecto(self.registro_actual, nuevo_proyecto.id)
         guardar_registro(registro_final)
+        guardar_registro(nuevo_registro)
 
         self.registro_actual = nuevo_registro
         self.proyecto_actual = nuevo_proyecto
@@ -182,7 +192,8 @@ class VentanaPrincipal:
             return
 
         proyectos_por_id = {p.id: p.nombre for p in self.proyectos}
-        registros = []  # Se conectará más adelante a BD real
+        
+        registros = []  # A rellenar más adelante con registros reales desde BD
         pausas = []
 
         resumen = obtener_resumen_diario(
@@ -191,6 +202,11 @@ class VentanaPrincipal:
             pausas=pausas,
             proyectos_por_id=proyectos_por_id
         )
+
+        # Evitar que falle si no hay datos
+        if not resumen["proyectos"]:
+            messagebox.showwarning("Exportación cancelada", "No hay datos para exportar.")
+            return
 
         exportar_resumen_diario_a_excel(resumen)
         messagebox.showinfo("Exportación", "Resumen exportado correctamente.")

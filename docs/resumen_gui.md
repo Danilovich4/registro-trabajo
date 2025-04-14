@@ -8,7 +8,6 @@ Esta es la capa de presentación del sistema TimeTrack, implementada con **Tkint
 
 src/presentation/gui/ventana_principal.py
 
-
 ---
 
 ## 🎯 Objetivo
