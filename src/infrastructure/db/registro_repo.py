@@ -26,29 +26,40 @@ def crear_tabla_registros():
     conn.close()
 
 def guardar_registro(registro: Registro):
-    """
-    Guarda un objeto Registro en la base de datos.
-    :param registro: Instancia de Registro ya finalizada o en curso.
-    """
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        INSERT INTO registros (proyecto_id, fecha, inicio, fin, tiempo_total, pausas_total)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (
-        registro.proyecto_id,
-        str(registro.fecha),
-        registro.inicio.isoformat(),
-        registro.fin.isoformat() if registro.fin else None,
-        str(registro.duracion_total()) if registro.fin else None,
-        None  # Se calculará más adelante con la suma de pausas reales
-    ))
+    if registro.id is None:
+        # Nuevo registro → INSERT
+        cursor.execute("""
+            INSERT INTO registros (proyecto_id, fecha, inicio, fin, tiempo_total, pausas_total)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            registro.proyecto_id,
+            str(registro.fecha),
+            registro.inicio.isoformat(),
+            registro.fin.isoformat() if registro.fin else None,
+            str(registro.duracion_total()) if registro.fin else None,
+            str(registro.pausas_total) if registro.pausas_total else None
+        ))
+        registro.id = cursor.lastrowid
 
-    registro.id = cursor.lastrowid
+    else:
+        # Ya existe → UPDATE
+        cursor.execute("""
+            UPDATE registros
+            SET fin = ?, tiempo_total = ?, pausas_total = ?
+            WHERE id = ?
+        """, (
+            registro.fin.isoformat() if registro.fin else None,
+            str(registro.duracion_total()) if registro.fin else None,
+            str(registro.pausas_total) if registro.pausas_total else None,
+            registro.id
+        ))
 
     conn.commit()
     conn.close()
+
 
 def obtener_registros_por_fecha(fecha: date) -> list[Registro]:
     conn = get_connection()

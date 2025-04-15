@@ -14,6 +14,7 @@ def finalizar_jornada(registro_actual: Registro) -> Registro:
     if registro_actual.fin is not None:
         raise ValueError("La jornada ya ha sido finalizada.")
 
+    registro_actual.finalizar()
     total_pausas = calcular_pausas_de_registro(registro_actual.id)
     registro_actual.pausas_total = total_pausas
     

@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 class Registro:
     """
@@ -6,7 +6,7 @@ class Registro:
     Puede contener una o varias pausas por inactividad.
     """
 
-    def __init__(self, proyecto_id: int, fecha: date = None, inicio: datetime = None, id: int = None, fin: datetime = None):
+    def __init__(self, proyecto_id: int, fecha: date = None, inicio: datetime = None, id: int = None, fin: datetime = None, pausas_total: timedelta = timedelta()):
         """
         Inicializa un nuevo registro de trabajo.
 
@@ -21,6 +21,7 @@ class Registro:
         self.fecha = fecha if fecha else datetime.now().date()
         self.inicio = inicio if inicio else datetime.now()
         self.fin = fin
+        self.pausas_total = pausas_total
 
     def finalizar(self):
         """

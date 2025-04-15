@@ -165,6 +165,11 @@ class VentanaPrincipal:
                 nuevo_proyecto = proyecto
                 break
 
+        if self.pausa_actual:
+            self.pausa_actual.fin = datetime.now()
+            guardar_pausa(self.pausa_actual)
+            self.pausa_actual = None
+
         registro_final, nuevo_registro = cambiar_proyecto(self.registro_actual, nuevo_proyecto.id)
         guardar_registro(registro_final)
         guardar_registro(nuevo_registro)
@@ -185,6 +190,7 @@ class VentanaPrincipal:
 
         self.registro_actual = None
         self.pausa_actual = None
+        self.proyecto_actual = None
         self.label_estado.config(text="🛑 Jornada finalizada", fg="red")
 
     def exportar_excel(self):
