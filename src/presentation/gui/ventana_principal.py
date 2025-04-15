@@ -1,19 +1,20 @@
-#Python pueda encuentrar los módulos internos
+# Python pueda encuentrar los módulos internos
 import sys
 import os
 
 # Añadir la ruta raíz del proyecto (una carpeta arriba de /src)
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
 
-
+# Importar módulos necesarios
 import tkinter as tk
 from tkinter import ttk, simpledialog, messagebox
 from datetime import date, datetime, timedelta
 
-# ENTITIES y USECASES
+# ENTITIES
 from core.entities.proyecto import Proyecto
 from core.entities.registro import Registro
 
+# USECASES
 from core.usecases.iniciar_registro import iniciar_registro
 from core.usecases.finalizar_jornada import finalizar_jornada
 from core.usecases.cambiar_proyecto import cambiar_proyecto
@@ -21,23 +22,23 @@ from core.usecases.registrar_pausa import registrar_pausa
 from core.usecases.obtener_resumen_diario import obtener_resumen_diario
 
 # INFRAESTRUCTURA
+## DB
 from infrastructure.db.proyecto_repo import (
     crear_tabla_proyectos,
     insertar_proyecto,
     obtener_todos_los_proyectos
 )
-from infrastructure.db.registro_repo import crear_tabla_registros, guardar_registro
-from infrastructure.db.pausa_repo import crear_tabla_pausas, guardar_pausa
-
+from infrastructure.db.registro_repo import crear_tabla_registros, guardar_registro, obtener_registros_por_fecha, obtener_todos_los_registros
+from infrastructure.db.pausa_repo import crear_tabla_pausas, guardar_pausa, obtener_pausas_por_fecha, obtener_todas_las_pausas
+## STORAGE
 from infrastructure.storage.estado_sesion import (
     crear_tablas_sesion,
     guardar_estado_sesion,
     borrar_estado_sesion,
     cargar_estado_sesion
 )
-
-from infrastructure.export.excel_exporter import exportar_resumen_diario_a_excel
-
+## EXPORT
+from infrastructure.export.excel_exporter import exportar_detalle_registros_a_excel
 
 class VentanaPrincipal:
     def __init__(self, root):
@@ -191,25 +192,19 @@ class VentanaPrincipal:
             messagebox.showinfo("Sin proyectos", "No hay proyectos cargados para exportar.")
             return
 
+        fecha_actual = date.today()
+
         proyectos_por_id = {p.id: p.nombre for p in self.proyectos}
-        
-        registros = []  # A rellenar más adelante con registros reales desde BD
-        pausas = []
 
-        resumen = obtener_resumen_diario(
-            fecha=date.today(),
-            registros=registros,
-            pausas=pausas,
-            proyectos_por_id=proyectos_por_id
-        )
+        registros = obtener_todos_los_registros()
+        pausas = obtener_todas_las_pausas()
 
-        # Evitar que falle si no hay datos
-        if not resumen["proyectos"]:
-            messagebox.showwarning("Exportación cancelada", "No hay datos para exportar.")
+        if not registros:
+            messagebox.showwarning("Exportación cancelada", "No hay registros para exportar.")
             return
 
-        exportar_resumen_diario_a_excel(resumen)
-        messagebox.showinfo("Exportación", "Resumen exportado correctamente.")
+        exportar_detalle_registros_a_excel(registros, pausas, proyectos_por_id)
+        messagebox.showinfo("Exportación", "Informe exportado correctamente.")
 
     def recuperar_sesion_anterior(self):
         datos = cargar_estado_sesion()

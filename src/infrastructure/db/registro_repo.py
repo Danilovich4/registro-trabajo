@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime
+from datetime import datetime, date
 from core.entities.registro import Registro
 from infrastructure.db.connection import get_connection
 
@@ -49,3 +49,55 @@ def guardar_registro(registro: Registro):
 
     conn.commit()
     conn.close()
+
+def obtener_registros_por_fecha(fecha: date) -> list[Registro]:
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id, proyecto_id, fecha, inicio, fin
+        FROM registros
+        WHERE fecha = ?
+    """, (str(fecha),))
+
+    filas = cursor.fetchall()
+    conn.close()
+
+    registros = []
+    for fila in filas:
+        id, proyecto_id, fecha_str, inicio_str, fin_str = fila
+        registros.append(Registro(
+            id=id,
+            proyecto_id=proyecto_id,
+            fecha=date.fromisoformat(fecha_str),
+            inicio=datetime.fromisoformat(inicio_str),
+            fin=datetime.fromisoformat(fin_str) if fin_str else None
+        ))
+
+    return registros
+
+def obtener_todos_los_registros() -> list[Registro]:
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id, proyecto_id, fecha, inicio, fin
+        FROM registros
+        WHERE fin IS NOT NULL
+    """)
+
+    filas = cursor.fetchall()
+    conn.close()
+
+    registros = []
+    for fila in filas:
+        id, proyecto_id, fecha_str, inicio_str, fin_str = fila
+        registros.append(Registro(
+            id=id,
+            proyecto_id=proyecto_id,
+            fecha=date.fromisoformat(fecha_str),
+            inicio=datetime.fromisoformat(inicio_str),
+            fin=datetime.fromisoformat(fin_str) if fin_str else None
+        ))
+
+    return registros

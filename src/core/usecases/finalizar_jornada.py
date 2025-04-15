@@ -1,5 +1,6 @@
 from core.entities.registro import Registro
-from datetime import datetime
+from datetime import datetime, timedelta
+from core.usecases.calcular_pausas_de_registro import calcular_pausas_de_registro  
 
 def finalizar_jornada(registro_actual: Registro) -> Registro:
     """
@@ -13,5 +14,7 @@ def finalizar_jornada(registro_actual: Registro) -> Registro:
     if registro_actual.fin is not None:
         raise ValueError("La jornada ya ha sido finalizada.")
 
-    registro_actual.finalizar()
+    total_pausas = calcular_pausas_de_registro(registro_actual.id)
+    registro_actual.pausas_total = total_pausas
+    
     return registro_actual
