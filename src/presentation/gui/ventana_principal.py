@@ -39,6 +39,8 @@ from infrastructure.storage.estado_sesion import (
 )
 ## EXPORT
 from infrastructure.export.excel_exporter import exportar_detalle_registros_a_excel
+#EXPORT
+from infrastructure.monitor.monitor_actividad import MonitorInactividad
 
 class VentanaPrincipal:
     def __init__(self, root):
@@ -88,6 +90,9 @@ class VentanaPrincipal:
 
         self.cargar_proyectos()
         self.recuperar_sesion_anterior()
+
+        self.monitor = MonitorInactividad(self.inactividad_detectada, self.reanudar)
+        self.monitor.iniciar()
 
     def cargar_proyectos(self):
         self.proyectos = obtener_todos_los_proyectos()
@@ -149,6 +154,23 @@ class VentanaPrincipal:
         guardar_estado_sesion(self.registro_actual, en_pausa=False)
 
         self.label_estado.config(text=f"✅ Reanudado en '{self.proyecto_actual.nombre}'", fg="green")
+
+        self.monitor._resetear_timer()
+
+    def inactividad_detectada(self):
+        if not self.registro_actual or self.pausa_actual:
+            return
+
+        self.pausa_actual = registrar_pausa(
+            registro_id=self.registro_actual.id,
+            inicio=datetime.now(),
+            fin=datetime.now() + timedelta(seconds=1)  # valor temporal
+        )
+
+        self.pausa_actual.fin = None  # queda como pausa activa
+        guardar_estado_sesion(self.registro_actual, en_pausa=True)
+
+        self.label_estado.config(text="⏸️ Pausa automática por inactividad", fg="orange")
 
     def cambiar_proyecto(self):
         if not self.registro_actual:
@@ -241,6 +263,20 @@ class VentanaPrincipal:
                 )
 
             messagebox.showinfo("Sesión recuperada", "Se restauró la sesión activa anterior.")
+
+    def inactividad_detectada(self):
+        if not self.registro_actual or self.pausa_actual:
+            return  # No hay sesión o ya está pausado
+
+        self.pausa_actual = registrar_pausa(
+            registro_id=self.registro_actual.id,
+            inicio=datetime.now(),
+            fin=datetime.now() + timedelta(seconds=1)
+        )
+        self.pausa_actual.fin = None  # Pausa activa
+
+        guardar_estado_sesion(self.registro_actual, en_pausa=True)
+        self.label_estado.config(text="⏸️ Pausa automática por inactividad", fg="orange")
 
 if __name__ == "__main__":
     root = tk.Tk()

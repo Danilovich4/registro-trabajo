@@ -18,7 +18,7 @@
 | 6  | Cambiar a proyecto "TestCambio"     | Registro anterior guardado, estado actualizado         | ✅                   | Se solucionó guardando `nuevo_registro` antes de guardar sesión |
 | 7  | Finalizar jornada                   | Registro guardado, sesión eliminada                    | ✅                   | Flujo cerrado correctamente             |
 | 8  | Cerrar y reabrir aplicación         | No se recupera sesión (porque fue finalizada)          | ✅                   | Recuperación correcta si no se finaliza |
-| 9  | Exportar resumen diario             | Archivo Excel generado con datos correctos             | ⚠️ Sin datos, muestra advertencia | Protección implementada contra resumen vacío |
+| 9  | Exportar resumen diario             | Archivo Excel generado con datos correctos             | ✅                   | Protección implementada contra resumen vacío |
 
 ---
 
