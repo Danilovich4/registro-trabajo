@@ -2,3 +2,4 @@ pynput
 pandas
 openpyxl
 pynput
+pytest

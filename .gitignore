@@ -1,8 +1,10 @@
 # 🐍 Python: Archivos de compilación
 __pycache__/
+.pytest_cache/
 *.py[cod]
 *.pyo
 *.pyd
+*.pyc
 
 # 📦 Entornos virtuales (locales)
 .venv/
